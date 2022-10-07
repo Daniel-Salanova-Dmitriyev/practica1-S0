@@ -13,8 +13,8 @@ size_t my_strlen(const char *str) {
 
 
 int my_strcmp(const char *str1, const char *str2){
-    int cont = 0;
-    int i = 0;
+    int cont = 0; //Contabiliza cuantas coinciden
+    int i = 0; //Utilizado para recorrer a la vez str1 y str2
     for(; str1[i] && str2[i]; i++){
         if(str1[i] - str2[i] == 0){
             cont++;
@@ -25,11 +25,11 @@ int my_strcmp(const char *str1, const char *str2){
         }
     }
     //Si salimos puede ser porque en uno no hay datos o porque son iguales
-    if(str1[i] && !str2[i]){
+    if(str1[i] && !str2[i]){ //En el caso de que str1 tenga los primeros caracteres iguales y sea mas grande 
         return 1;
-    }else if (!str1[i] && str2[i]){
+    }else if (!str1[i] && str2[i]){ //En el caso de que str2 tenga los primeros caracteres iguales y sea mas grande 
         return -1;
-    }else if (cont == my_strlen(str1)){
+    }else if (cont == my_strlen(str1)){ // En el caso de que sean iguales
         return 0;
     }
 }
@@ -39,12 +39,15 @@ char *my_strcat(char *dest, const char *src){
     while(dest[posNull]){ //Hayamos el caracter \0
         posNull++;
     }
-    printf("Posicion del Null: %i", posNull);
+    printf("Posicion del Null: %i\n", posNull);
     //Ahora sabemos donde esta la posNull, procedemos ha añadir caracteres
     int i = 0;
     for(; src[i];i++ ){
         dest[posNull++] = src[i];
+   
     }
+    //Colocamos el final de cadena
+    dest[posNull] = '\0';
     return dest;
 }
 
