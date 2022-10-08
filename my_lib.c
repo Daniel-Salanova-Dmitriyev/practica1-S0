@@ -50,7 +50,17 @@ char *my_strcat(char *dest, const char *src){
     dest[posNull] = '\0';
     return dest;
 }
-
+char *my_strchr(const char *str, int c){
+	assert(str != NULL);//comprobamos que no este vacio
+	while (*str)// mientras *str sea distinto de \0 seguira buscando
+	{
+		if (*str == c) //si la letra de la dirección es igual a la que buscamos
+			return (char *)str;//se devuelve la dirección de la letra
+		else
+			str++;//si no es la letra que buscamos pasamos a la siguiente
+	}
+	return NULL;//en caso de que no haya la letra devolvemos un valor nulo
+}
 int main(){
     //char cad1[5] = "apa";
     //char cad2[5] = "apo";
