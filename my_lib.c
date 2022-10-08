@@ -34,6 +34,25 @@ int my_strcmp(const char *str1, const char *str2){
     }
 }
 
+char *my_strcpy(char *dest, const char *src){
+	char* str = dest;
+	while ((*dest++ = *src++)!= '\0');
+	return str;
+}
+
+char *my_strncpy(char *dest, const char *src, size_t n){
+    char *cp = dest;
+	while (n && (*dest++ = *src++))	{
+		n--;
+	}
+	if (n>0){
+		while (--n)	{
+			*dest++ = '\0';
+		}
+	}
+	return cp;
+}
+
 char *my_strcat(char *dest, const char *src){
     int posNull = 0;
     while(dest[posNull]){ //Hayamos el caracter \0
