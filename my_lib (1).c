@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
-PROGRAMADORES:
-Salvà Salvà, Macià
-Kosyuk, Arkadiy
-Mikhailovskiy, Robert
-*/
 
 struct my_stack_node {      // nodo de la pila (elemento)
    void *data;
