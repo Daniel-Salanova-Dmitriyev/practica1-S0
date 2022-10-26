@@ -99,7 +99,7 @@ struct my_stack *my_stack_init(int size) {
 int my_stack_push(struct my_stack *stack,void *data) {
     struct my_stack_node nuevo;
     //Si la pila estaba vacía, el nodo se enlaza con el puntero first
-    if(stack->top=NULL) {
+    if(stack->top==NULL) {
         stack->top=&nuevo;
         nuevo.data=data;
         nuevo.next=NULL;
