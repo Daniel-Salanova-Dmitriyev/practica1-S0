@@ -24,8 +24,9 @@ int main() {
        strcpy(data1->name, names[i]);
        my_stack_push(s,data1);
        printf("Valor: %d\t", data1->val);
-       printf("Nombre: %s\n", data1->name);
+       printf("Nombre: %s\n", data1->name);  
    }
+
    printf("Longitud de la pila tras meter los elementos: %d\n", my_stack_len(s));
    printf ("\nExtraemos todos los nodos de la pila\n");
    while (s->top){//extraemos los nodos con pop
@@ -48,7 +49,6 @@ int main() {
    printf("\nsizeof(struct my_stack): %lu\n", sizeof(struct my_stack));
    printf("sizeof(struct my_stack_node): %lu\n", sizeof(struct my_stack_node));
    printf("sizeof(struct my_data): %lu\n", sizeof(struct my_data));
-   
    //liberamos todo el espacio ocupado por la pila
    printf ("\nLiberamos %lu bytes del struct my_stack, %lu bytes de los nodos y %lu de los datos. Total: %d\n", sizeof (struct my_stack), sizeof (struct my_stack_node)*2, sizeof(struct my_data)*2, my_stack_purge(s));
 }

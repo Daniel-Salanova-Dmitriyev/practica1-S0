@@ -88,7 +88,7 @@ char *my_strchr(const char *str, int c){
 //OBJETIVO: Inicializa una estructura de tipo pila
 //DEVUELVE: direccion de la pila
 struct my_stack *my_stack_init(int size) {
-    struct my_stack *pila=malloc(size);
+    struct my_stack *pila=malloc(sizeof(struct my_stack));
     pila->size=size;
     pila->top=NULL;
     return pila;
@@ -97,39 +97,53 @@ struct my_stack *my_stack_init(int size) {
 //OBJETIVO: Añade un elemento a la pila
 //DEVUELVE: 0
 int my_stack_push(struct my_stack *stack,void *data) {
+    //Creamos el elemento a añadir
     struct my_stack_node *nuevo;
-    nuevo->data=data;
-    //Si la pila estaba vacía, el nodo se enlaza con el puntero first
-    if(stack->top==NULL) {
-        stack->top=nuevo;  
-        nuevo->next=NULL;
-        return 0;
-    //Si la pila contenía nodos
-    } else {
-        struct my_stack_node *aux=stack->top;
-        //Buscamos el ultimo nodo
-        while(aux->next!=NULL) {
-            aux=aux->next;
-        }
-        aux->next=nuevo;
-        nuevo->next=NULL;
+    nuevo = malloc(sizeof(struct my_stack_node));
+    struct my_stack_node *antiguoTop = stack->top;
+    
+    if(stack == NULL){
         return 0;
     }
+    
+    nuevo->data = data;
+    nuevo->next = antiguoTop;
+    stack->top = nuevo;
+    return 0;
+    
 }
 
 //FUNCION MY_STACK_POP
 //OBJETIVO: Saca un elemento de la pila, eliminando el nodo
 //DEVUELVE: puntero a los datos del nodo eliminado
 void *my_stack_pop (struct my_stack *stack) {
-    //BUSCAMOS EL ULTIMO ELEMENTO
-    //Caso de no tener elementos
-    if(stack->top==NULL) {
+    if(stack->top == NULL){ //En el caso de que este vacio
+        return NULL;
+    }else{
+        //Nodo a eliminar
+        struct my_stack_node *nodo = stack->top;
+        //Recogemos el dato
+        void *dato = nodo->data;
+        //Actualizamos el puntero de top
+        stack->top = nodo->next;
+        //Liberamos la memoria del top anterior
+        free(nodo);
+        return dato;
+    }
+    
+}
+
+
+
+/*
+if(stack->top==NULL) {
         printf("No hay nada que exportar.");
         return NULL;
     //Caso de tener un unico elemento
     } else if (stack->top->next==NULL) {
         void *aux=stack->top;
         free(stack->top);
+        
         return aux;
     //Caso de tener varios elementos
     } else {
@@ -144,13 +158,20 @@ void *my_stack_pop (struct my_stack *stack) {
         aux->next=NULL;
         free(aux);
     }
-}
+*/
+
+
 
 //FUNCION MY_STACK_LEN
 //OBJETIVO: Calcula la longitud de una pila (numero de elementos)
 //DEVUELVE: numero de elementos
 int my_stack_len(struct my_stack *stack) {
     int numero;
+/*
+    char *dir = &stack->top->data;
+    printf("Dato primer elemento: %s", dir);    
+*/
+
     //Caso de no tener elementos
     if(stack->top==NULL) {
         numero=0;
