@@ -97,25 +97,22 @@ struct my_stack *my_stack_init(int size) {
 //OBJETIVO: Añade un elemento a la pila
 //DEVUELVE: 0
 int my_stack_push(struct my_stack *stack,void *data) {
-    struct my_stack_node nuevo;
+    struct my_stack_node *nuevo;
+    nuevo->data=data;
     //Si la pila estaba vacía, el nodo se enlaza con el puntero first
-    if(stack->top=NULL) {
-        stack->top=&nuevo;
-        nuevo.data=data;
-        nuevo.next=NULL;
+    if(stack->top==NULL) {
+        stack->top=nuevo;  
+        nuevo->next=NULL;
         return 0;
-    //Si la pila contenía nodos, se crea un puntero auxiliar que busque 
-    //el último nodo creado, y su puntero next se enlaza con nuestro nodo
+    //Si la pila contenía nodos
     } else {
-        //Puntero auxiliar
         struct my_stack_node *aux=stack->top;
         //Buscamos el ultimo nodo
         while(aux->next!=NULL) {
             aux=aux->next;
         }
-        aux->next=&nuevo;
-        nuevo.data=data;
-        nuevo.next=NULL;
+        aux->next=nuevo;
+        nuevo->next=NULL;
         return 0;
     }
 }
