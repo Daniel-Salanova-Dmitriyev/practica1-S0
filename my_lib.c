@@ -84,163 +84,108 @@ char *my_strchr(const char *str, int c){
 	return NULL;//en caso de que no haya la letra devolvemos un valor nulo
 }
 
-//FUNCION MY_STACK_INIT
-//OBJETIVO: Inicializa una estructura de tipo pila
-//DEVUELVE: direccion de la pila
+/**
+ * Inicializamos la pila
+*/
 struct my_stack *my_stack_init(int size) {
-    struct my_stack *pila=malloc(sizeof(struct my_stack));
-    pila->size=size;
-    pila->top=NULL;
+    struct my_stack *pila=malloc(sizeof(struct my_stack)); //Guardamos espacio en memoria para la pila
+    pila->size=size;    //Esto indicará el tamaño de los datos a colocar
+    pila->top=NULL;     //Como no hay nada lo ponemos a NULL
     return pila;
 }
-//FUNCION MY_STACK_PUSH
-//OBJETIVO: Añade un elemento a la pila
-//DEVUELVE: 0
+/**
+ * Función con la que podremos añadir datos a la pila
+*/
 int my_stack_push(struct my_stack *stack,void *data) {
+    if(stack == NULL){ //Si el stack no ha sido inicializado
+        return -1;
+    }
+
+    if(stack->size <= 0){
+        return -1;
+    }
+
     //Creamos el elemento a añadir
     struct my_stack_node *nuevo;
-    nuevo = malloc(sizeof(struct my_stack_node));
+    nuevo = malloc(sizeof(struct my_stack_node)); //Guardamos espacio en memoria para el elemento
+
+    if(!nuevo){ //Si no se le ha podido asignar memoria o ha fallado la asignacion
+        return -1;
+    }
+
     struct my_stack_node *antiguoTop = stack->top;
     
-    if(stack == NULL){
-        return 0;
-    }
-    
+    //Asignamos el dato y el siguiente nodo    
     nuevo->data = data;
     nuevo->next = antiguoTop;
+
+    //Actualizamos el top
     stack->top = nuevo;
     return 0;
     
 }
 
-//FUNCION MY_STACK_POP
-//OBJETIVO: Saca un elemento de la pila, eliminando el nodo
-//DEVUELVE: puntero a los datos del nodo eliminado
+/**
+ * Función con el que eliminamos el top de la pila
+*/
 void *my_stack_pop (struct my_stack *stack) {
     if(stack->top == NULL){ //En el caso de que este vacio
         return NULL;
     }else{
         //Nodo a eliminar
         struct my_stack_node *nodo = stack->top;
+
         //Recogemos el dato
         void *dato = nodo->data;
+
         //Actualizamos el puntero de top
         stack->top = nodo->next;
+
         //Liberamos la memoria del top anterior
         free(nodo);
+
         return dato;
     }
     
 }
 
 
-
-/*
-if(stack->top==NULL) {
-        printf("No hay nada que exportar.");
-        return NULL;
-    //Caso de tener un unico elemento
-    } else if (stack->top->next==NULL) {
-        void *aux=stack->top;
-        free(stack->top);
-        
-        return aux;
-    //Caso de tener varios elementos
-    } else {
-        //Puntero auxiliar
-        struct my_stack_node *aux=stack->top;
-        //Buscamos el ultimo nodo
-        while(aux->next->next!=NULL) {
-            aux=aux->next;
-        }
-        return aux->next;
-        free(aux->next);
-        aux->next=NULL;
-        free(aux);
-    }
+/**
+ * Función que recorre la pila entera, guardando de esta manera cuantos elementos hay
 */
-
-
-
-//FUNCION MY_STACK_LEN
-//OBJETIVO: Calcula la longitud de una pila (numero de elementos)
-//DEVUELVE: numero de elementos
 int my_stack_len(struct my_stack *stack) {
-    int numero;
-/*
-    char *dir = &stack->top->data;
-    printf("Dato primer elemento: %s", dir);    
-*/
+    int contador = 0; //Contador
 
-    //Caso de no tener elementos
-    if(stack->top==NULL) {
-        numero=0;
-    //Caso de tener un unico elemento
-    } else if(stack->top->next==NULL) {
-            numero=1;
-    //Caso de tener varios elementos
-    } else {
-        struct my_stack_node *aux=stack->top;
-        numero=1;
-        //Recorremos hasta el ultimo nodo sumando 1 al contador
-        while(aux->next!=NULL) {
-            numero++;
-            aux=aux->next;
-        }
-        return numero;
+    struct my_stack_node *nodo = stack->top; //Primer dato
+    while(nodo != NULL){
+        //Actualizamos el contador y el siguiente nodo
+        contador++;
+        nodo = nodo->next;
     }
-}
 
-//FUNCION MY_STACK_PURGE
-//OBJETIVO: Elimina la pila y los datos apuntados por ella
-//DEVUELVE:  numero de bytes liberados
-int my_stack_purge (struct my_stack *stack) {
-    int numero;
-    struct my_stack_node *aux;
-    //Caso de no tener elementos
-    if (stack->top==NULL) {
-        numero=sizeof(stack);
-        free(stack);
-        return numero;
-    //Caso de tener elementos
-    } else {
-    //Mientras queden >1 elementos en la pila
-    while (stack->top->next!=NULL) {
-        numero=1,
-        aux=stack->top;
-        //Buscamos el ultimo elemento de la pila
-        while(aux->next!=NULL) {
-            aux=aux->next;
-            numero++;
-        }
-        //Eliminamos los datos del ultimo elemento
-        free(aux->data);
-        free(aux->next);
-        free(aux);
-    }
-    //Eliminamos el ultimo elemento que nos queda
-    free(stack->top->data);
-    free(stack->top->next);
-    free(stack->top);
-    //Eliminamos la pila
-    int bytesPila=sizeof(stack);
-    free(stack->top);
-    free(stack);
-    numero+=bytesPila;
-    numero*=stack->size;
-    return numero;
-    }
-}
-
-//void main(){
-    //char cad1[5] = "apa";
-    //char cad2[5] = "apo";
-    //int a = my_strcmp(cad1,cad2);
-    //printf("Valor de la comparacion: %i", a);
-    // char cad1[50] = "Inicio-";
-    // char cad2[50] = "Final";
-    // my_strcat(cad1,cad2);
-    // printf("My frase queda como: %s", cad1);
-
+    return contador;
     
-//}
+}
+
+/**
+ * Devolvemos la cantidad de memoria liberada
+*/
+int my_stack_purge (struct my_stack *stack) {
+    int liberado = stack->size; //Memoria liberada
+    int numero = 0; //Cuenta los nodos que hay
+    struct my_stack_node *aux; //Nuestro indice
+
+    while(stack->top){ //Mientras no este vacío
+        aux = stack->top;
+        stack->top = stack->top->next;
+        free(aux); //Liberamos
+        numero++;        
+    }
+    liberado *= numero; //Cuanto han ocupado los datos
+    liberado += numero * sizeof(struct my_stack_node) + sizeof(struct my_stack);
+    return liberado;
+}
+
+
+
+
