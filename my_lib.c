@@ -33,6 +33,48 @@ int my_strcmp(const char *str1, const char *str2){
     return 0;
    //}
 }
+int my_stack_write (struct my_stack *stack, char *filename){
+    struct my_stack *aux;
+    aux = my_stack_init(stack->size);
+    struct my_stack_node *nodo = stack->top;
+    int result;
+    while (nodo!=NULL)
+    {
+        void *dato= nodo->data;
+        my_stack_push(aux,dato);
+        nodo=nodo->next;
+
+    }
+    int fichero = open(filename, O_WRONLY|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR);
+
+    if (fichero==-1){
+        exit(1);
+        return -1;
+
+    }
+     
+    result = write(fichero,&(aux->size),4);
+    if (result==-1){
+        close(fichero);
+        return -1;
+    }
+
+    int contador=0;
+    while (aux->top!=NULL)
+    {
+        void *dato = my_stack_pop(aux);
+        result = write(fichero, dato, aux->size);
+        if (result==-1){
+            close(fichero);
+            return -1;
+        }
+        contador++;
+    }
+    
+    close(fichero);
+    return contador;
+
+}
 
 char *my_strcpy(char *dest, const char *src){
 	char* str = dest;
