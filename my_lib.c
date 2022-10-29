@@ -1,7 +1,6 @@
 #include "my_lib.h"
 #include <assert.h>
 
-
 size_t my_strlen(const char *str) {
    size_t len = 0;
    int i = 0;
