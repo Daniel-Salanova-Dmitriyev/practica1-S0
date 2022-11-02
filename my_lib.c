@@ -37,22 +37,20 @@ int my_strcmp(const char *str1, const char *str2){
 }
 
 char *my_strcpy(char *dest, const char *src){
-	char* str = dest;
-	while ((*dest++ = *src++)!= '\0');
-	return str;
+	while ((*dest++ = *src++)!= '\0');//copia la cadena apuntada por src en la memoria apuntada por dest.
+	return dest;
 }
 
 char *my_strncpy(char *dest, const char *src, size_t n){
-    char *cp = dest;
-	while (n && (*dest++ = *src++))	{
+	while (n && (*dest++ = *src++))	{//copia la cadena apuntada por src  en la memoria apuntada por dest.
 		n--;
 	}
 	if (n>0){
-		while (--n)	{
+		while (--n)	{//copia n caracteres de la cadena(con el carácter de terminación ‘\0’)
 			*dest++ = '\0';
 		}
 	}
-	return cp;
+	return dest;
 }
 
 char *my_strcat(char *dest, const char *src){
@@ -230,3 +228,4 @@ int my_stack_write (struct my_stack *stack, char *filename){
     
     close(fichero);
     return contador;
+}
