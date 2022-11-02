@@ -34,23 +34,25 @@ int my_strcmp(const char *str1, const char *str2){
    //}
 }
 
-}
+
 
 char *my_strcpy(char *dest, const char *src){
-	while ((*dest++ = *src++)!= '\0');//copia la cadena apuntada por src en la memoria apuntada por dest.
-	return dest;
+	char* str = dest;
+	while ((*dest++ = *src++)!= '\0');
+	return str;
 }
 
 char *my_strncpy(char *dest, const char *src, size_t n){
-	while (n && (*dest++ = *src++))	{//copia la cadena apuntada por src  en la memoria apuntada por dest.
+    char *cp = dest;
+	while (n && (*dest++ = *src++))	{
 		n--;
 	}
 	if (n>0){
-		while (--n)	{//copia n caracteres de la cadena(con el carácter de terminación ‘\0’)
+		while (--n)	{
 			*dest++ = '\0';
 		}
 	}
-	return dest;
+	return cp;
 }
 
 char *my_strcat(char *dest, const char *src){
@@ -229,3 +231,45 @@ int my_stack_write (struct my_stack *stack, char *filename){
     close(fichero);
     return contador;
 }
+struct my_stack *my_stack_read(char *filename){
+    int fd,result;
+    struct my_stack *stack;
+    struct my_stack_node *newnode;
+  
+ 
+//  Abrimos el fichero en modo lectura
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) {return NULL;}
+    stack = malloc(sizeof(struct my_stack));
+//  Leemos el tamano de los datos y lo guardamos en stack
+    result = read(fd, &(stack->size), 4);
+    if (result == -1) {
+            close(fd);
+            return NULL;
+    }
+   
+    newnode = malloc(sizeof(struct my_stack_node));
+    newnode->data = malloc(stack->size);
+    result = read(fd, newnode->data, stack->size);
+//  Mientras la lectura sea correcta
+    while (result > 0) {
+//	    Si es el primer elemento
+            my_stack_push(stack,newnode->data);
+           
+            newnode = malloc(sizeof(struct my_stack_node));
+            newnode->data = malloc(stack->size);
+// 	    Leemos el dato y lo guardamos en newnode
+            result = read(fd, newnode->data, stack->size);
+    }
+// Liberamos el espacio del ultimo nodo, porque no son datos del stack
+    free(newnode->data);
+    free(newnode);
+    result = close(fd);
+    if (result == -1) {
+            my_stack_purge(stack);
+            return NULL;
+    }
+    return stack;
+    
+    
+    }
