@@ -6,7 +6,9 @@
 //Daniel Salanova Dmitriyev
 
 /**
- * Funcioón que cuneta cuanta longitud tiene una cadena
+ * Función que cuenta cuanta longitud tiene una cadena
+ * INPUT -> cadena de caracteres
+ * OUTPUT -> longitud de la cadena
 */
 size_t my_strlen(const char *str) {
    size_t len = 0;
@@ -19,7 +21,12 @@ size_t my_strlen(const char *str) {
    return len;
 }
 
-
+/**
+ * FUnción que compara 2 cadenas y en caso de encontrar un caracter diferente devuelve
+ * la diferencia entre los 2
+ * INPUT -> 2 cadenas de texto
+ * OUTPUT -> 0 (si son iguales) o la diferencia entre las 2 letras
+*/
 int my_strcmp(const char *str1, const char *str2){
     int cont = 0; //Contabiliza cuantas coinciden
     int i = 0; //Utilizado para recorrer a la vez str1 y str2
@@ -45,6 +52,8 @@ int my_strcmp(const char *str1, const char *str2){
 
 /**
  * Función que se encarga de copiar el contenido de una cadena en otra
+ * INPUT -> 1 posición de memoria y 1 cadena de texto
+ * OUTPUT -> puntero a la posicion de memoria (dest)
 */
 char *my_strcpy(char *dest, const char *src){
 	char* str = dest;
@@ -52,6 +61,12 @@ char *my_strcpy(char *dest, const char *src){
 	return str;
 }
 
+
+/**
+ * Función que copia de n caracteres dentro de dest
+ * INPUT -> posicion de memoria, cadena de caracteres y número que indica cuantos son
+ * OUTPUT -> puntero a la posición de memoria
+*/
 char *my_strncpy(char *dest, const char *src, size_t n){
     char *cp = dest;
 	while (n && (*dest++ = *src++))	{
@@ -65,6 +80,11 @@ char *my_strncpy(char *dest, const char *src, size_t n){
 	return cp;
 }
 
+/**
+ * Función que añade una cadena al final de otra
+ * INPUT -> 2 cadenas de texto
+ * OUTPUT -> devuelve el puntero de la cadena dest 
+*/
 char *my_strcat(char *dest, const char *src){
     int posNull = 0;
     while(dest[posNull]){ //Hayamos el caracter \0
@@ -81,7 +101,11 @@ char *my_strcat(char *dest, const char *src){
     return dest;
 }
 
-
+/**
+ * Función que busca una letra dentro de la cadena
+ * INPUT -> cadena y letra a buscar
+ * OUTPUT -> puntero donde se encuentra la ocurrecia o -1 en caso de no hayarse
+*/
 char *my_strchr(const char *str, int c){
 	assert(str != NULL);//comprobamos que no este vacio
 	while (*str)// mientras *str sea distinto de \0 seguira buscando
@@ -96,6 +120,8 @@ char *my_strchr(const char *str, int c){
 
 /**
  * Inicializamos la pila
+ * INPUT -> tamaño de los datos
+ * OUTPUT -> puntero a la pila
 */
 struct my_stack *my_stack_init(int size) {
     struct my_stack *pila=malloc(sizeof(struct my_stack)); //Guardamos espacio en memoria para la pila
@@ -108,8 +134,11 @@ struct my_stack *my_stack_init(int size) {
     pila->top=NULL;     //Como no hay nada apunta a NULL
     return pila;
 }
+
 /**
  * Función con la que podremos añadir datos a la pila
+ * INPUT -> puntero a la pila y dato a añadir
+ * OUTPUT -> -1 si hay error o 0 si se hizo bien la operacion
 */
 int my_stack_push(struct my_stack *stack,void *data) {
     if(stack == NULL){ //Si el stack no ha sido inicializado
@@ -145,6 +174,8 @@ int my_stack_push(struct my_stack *stack,void *data) {
 
 /**
  * Función con el que eliminamos el nodo señalado por el top de la pila
+ * INPUT -> puntero a la pila
+ * OUTPUT -> puntero al dato eliminado
 */
 void *my_stack_pop (struct my_stack *stack) {
     if(stack->top == NULL){ //En el caso de que este vacio
@@ -170,6 +201,8 @@ void *my_stack_pop (struct my_stack *stack) {
 
 /**
  * Función que recorre la pila y cuenta los elementos que contiene.
+ * INPUT -> pila
+ * OUTPUT -> longitud de la pila
 */
 int my_stack_len(struct my_stack *stack) {
     int contador = 0; //Contador
@@ -187,6 +220,8 @@ int my_stack_len(struct my_stack *stack) {
 
 /**
  * Devolvemos la cantidad de memoria liberada
+ * INPUT -> pila
+ * OUTPUT -> cantidad de memoria liberada
 */
 int my_stack_purge (struct my_stack *stack) {
     int liberado = stack->size; //Memoria liberada
@@ -210,6 +245,8 @@ int my_stack_purge (struct my_stack *stack) {
 
 /**
  * Función que se encarga de escribir el contenido de la pila dentro de un fichero dado
+ * INPUT -> pila y nombre del fichero
+ * OUTPUT -> -1 si hay error, y sino la cantidad de datos escritos
 */
 int my_stack_write (struct my_stack *stack, char *filename){
     
@@ -266,8 +303,11 @@ int my_stack_write (struct my_stack *stack, char *filename){
 }
 
 
-
- // my_stack_read intenta leer un stack del fichero filename y devolverlo.
+/**
+ * Función que lee un stack del fichero filename y lo devuelve
+ * INPUT -> fichero
+ * OUTPUT -> puntero a la pila leida
+ * */ 
 struct my_stack *my_stack_read(char *filename) {
     struct my_stack *stack; //Nuestra pila
     int pila_size = 0;  //Tamaño de la pila
