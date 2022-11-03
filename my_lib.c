@@ -1,5 +1,9 @@
 #include "my_lib.h"
 #include <assert.h>
+//Creadores
+//Arkadiy Kosyuk
+
+
 
 size_t my_strlen(const char *str) {
    size_t len = 0;
@@ -91,7 +95,7 @@ char *my_strchr(const char *str, int c){
 struct my_stack *my_stack_init(int size) {
     struct my_stack *pila=malloc(sizeof(struct my_stack)); //Guardamos espacio en memoria para la pila
     pila->size=size;    //Esto indicará el tamaño de los datos a colocar
-    pila->top=NULL;     //Como no hay nada lo ponemos a NULL
+    pila->top=NULL;     //Como no hay nada apunta a NULL
     return pila;
 }
 /**
@@ -127,7 +131,7 @@ int my_stack_push(struct my_stack *stack,void *data) {
 }
 
 /**
- * Función con el que eliminamos el top de la pila
+ * Función con el que eliminamos el nodo señalado por el top de la pila
 */
 void *my_stack_pop (struct my_stack *stack) {
     if(stack->top == NULL){ //En el caso de que este vacio
@@ -152,7 +156,7 @@ void *my_stack_pop (struct my_stack *stack) {
 
 
 /**
- * Función que recorre la pila entera, guardando de esta manera cuantos elementos hay
+ * Función que recorre la pila y cuenta los elementos que contiene.
 */
 int my_stack_len(struct my_stack *stack) {
     int contador = 0; //Contador
@@ -189,39 +193,41 @@ int my_stack_purge (struct my_stack *stack) {
 
 
 
-
+// Función que escribe en un fichero el contenido de la pila
 int my_stack_write (struct my_stack *stack, char *filename){
-    struct my_stack *aux;
-    aux = my_stack_init(stack->size);
-    struct my_stack_node *nodo = stack->top;
-    int result;
-    while (nodo!=NULL)
+    struct my_stack *aux;//inicializamos la pila auxiliar
+    aux = my_stack_init(stack->size);//inicializamos la pila con el tamaño de datos de la pila original
+    struct my_stack_node *nodo = stack->top;//primer dato
+    int resultado;//Resultado de la escritura para saber si falló o no
+    while (nodo!=NULL)//mientras haya nodos seguimos introduciendolos en la pila auxiliar
     {
         void *dato= nodo->data;
         my_stack_push(aux,dato);
         nodo=nodo->next;
 
     }
+	//abrimos el fichero
     int fichero = open(filename, O_WRONLY|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR);
-
+	//comprobamos si el fichero a fallado
     if (fichero==-1){
-        exit(1);
+        close(fichero);
         return -1;
 
     }
-     
-    result = write(fichero,&(aux->size),4);
+     //Escribimos en los primeros 4 byts el tamaño de los datos
+    resultado = write(fichero,&(aux->size),4);
+	//comprobamos si la escritura fue exitosa
     if (result==-1){
         close(fichero);
         return -1;
     }
 
-    int contador=0;
-    while (aux->top!=NULL)
+    int contador=0;//inicializamos el contador de datos introducidos
+    while (aux->top!=NULL)//mientras la pila no este vacia
     {
-        void *dato = my_stack_pop(aux);
-        result = write(fichero, dato, aux->size);
-        if (result==-1){
+        void *dato = my_stack_pop(aux);//sacas el dato de la pila auxiliar
+        resultado = write(fichero, dato, aux->size);//escribes el dato
+        if (result==-1){//compruebas que se haya escrito correctamente 
             close(fichero);
             return -1;
         }
@@ -229,43 +235,45 @@ int my_stack_write (struct my_stack *stack, char *filename){
     }
     
     close(fichero);
-    return contador;
+    return contador;//devolvemos la cantidad de datos escritos
 }
+
+//Funcion que lee de un fichero los datos a una pila
 struct my_stack *my_stack_read(char *filename){
-    int fd,result;
+	
+    int fichero,resultado;
     struct my_stack *stack;
     struct my_stack_node *newnode;
   
  
 //  Abrimos el fichero en modo lectura
-    fd = open(filename, O_RDONLY);
-    if (fd == -1) {return NULL;}
+    fichero = open(filename, O_RDONLY);
+    if (fichero == -1) {return NULL;}
     stack = malloc(sizeof(struct my_stack));
 //  Leemos el tamano de los datos y lo guardamos en stack
-    result = read(fd, &(stack->size), 4);
-    if (result == -1) {
-            close(fd);
+    resultado = read(fd, &(stack->size), 4);
+//  Comprobamos que se haya leido bien
+    if (resultado == -1) {
+            close(fichero);
             return NULL;
     }
-   
     newnode = malloc(sizeof(struct my_stack_node));
     newnode->data = malloc(stack->size);
-    result = read(fd, newnode->data, stack->size);
+    resultado = read(fichero, newnode->data, stack->size);
 //  Mientras la lectura sea correcta
-    while (result > 0) {
-//	    Si es el primer elemento
+    while (resultado > 0) {
+//Introducimos en la pila el dato
             my_stack_push(stack,newnode->data);
-           
             newnode = malloc(sizeof(struct my_stack_node));
             newnode->data = malloc(stack->size);
-// 	    Leemos el dato y lo guardamos en newnode
-            result = read(fd, newnode->data, stack->size);
+// Leemos el dato y lo guardamos en newnode
+            resultado = read(fichero, newnode->data, stack->size);
     }
 // Liberamos el espacio del ultimo nodo, porque no son datos del stack
     free(newnode->data);
     free(newnode);
-    result = close(fd);
-    if (result == -1) {
+    resultado = close(fichero);
+    if (resultado == -1) {
             my_stack_purge(stack);
             return NULL;
     }
